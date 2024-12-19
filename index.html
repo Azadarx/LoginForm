@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Form</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" required />
+          <div id="emailHelp" class="form-text">
+            We'll never share your email with anyone else.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="exampleInputPassword1"
+            required
+            oninput="passwordWriting()"
+          />
+          <!-- Password validation message -->
+          <div id="passwordValidation"></div>
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+          <label class="form-check-label" for="exampleCheck1">Remember me</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+
+    <script>
+      // Form submit event listener
+      document.getElementById("loginForm").addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent form submission
+
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("exampleInputPassword1").value;
+        const passwordRegex =
+          /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
+
+        // Password validation
+        if (!passwordRegex.test(password)) {
+          alert(
+            "Password must be between 8-15 characters, contain at least one uppercase letter, one number, and one special character."
+          );
+          return;
+        }
+
+        // Username validation
+        if (username === "") {
+          alert("Please enter a username!");
+          return;
+        }
+
+        // Store the username in localStorage
+        localStorage.setItem("username", username);
+        window.location.href = "welcome.html"; // Redirect to welcome page
+      });
+
+      const passwordInput = document.getElementById("exampleInputPassword1");
+
+      function togglePassword() {
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+        } else {
+          passwordInput.type = "password";
+        }
+      }
+
+      const passwordValidation = document.getElementById("passwordValidation");
+
+      function passwordWriting() {
+        const password = passwordInput.value;
+        const common = "Password must ";
+
+        const passwordUpperCase = /^(?=.*[A-Z])/;
+        const passwordAtleastOneNumber = /^(?=.*\d)/;
+        const passwordAtleastOneSpecialChar = /^(?=.*[!@#$%^&*])/;
+        const passwordLowerCase = /^(?=.*[a-z])/;
+        const passwordLength = /^.{8,15}$/;
+
+        let validationMessage = "";
+
+        if (password.length < 8 || password.length > 15) {
+          validationMessage += common + "be between 8-15 characters. ";
+        }
+        if (!passwordUpperCase.test(password)) {
+          validationMessage += common + "contain at least one uppercase letter. ";
+        }
+        if (!passwordAtleastOneNumber.test(password)) {
+          validationMessage += common + "contain at least one number. ";
+        }
+        if (!passwordAtleastOneSpecialChar.test(password)) {
+          validationMessage += common + "contain at least one special character. ";
+        }
+        if (!passwordLowerCase.test(password)) {
+          validationMessage += common + "contain at least one lowercase letter. ";
+        }
+
+        if (validationMessage !== "") {
+          passwordValidation.style.color = "red";
+          passwordValidation.textContent = validationMessage;
+        } else {
+          passwordValidation.style.color = "green";
+          passwordValidation.textContent = "Password is valid.";
+        }
+      }
+    </script>
+  </body>
+</html>
